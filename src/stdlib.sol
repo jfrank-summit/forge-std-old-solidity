@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.6.0 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;
 
 import "./Vm.sol";
 
 // Wrappers around Cheatcodes to avoid footguns
-abstract contract stdCheats {
-    using stdStorage for StdStorage;
+contract stdCheats {
+    using stdStorage for stdStorage.StdStorage;
 
     // we use custom names that are unlikely to cause collisions so this contract
     // can be inherited easily
     Vm private constant vm_std_cheats = Vm(address(uint160(uint256(keccak256('hevm cheat code')))));
-    StdStorage private std_store_std_cheats;
+    stdStorage.StdStorage private std_store_std_cheats;
 
     // Skip forward or rewind time by the specified number of seconds
     function skip(uint256 time) public {
@@ -113,19 +113,20 @@ library stdError {
     bytes public constant lowLevelError = bytes(""); // `0x`
 }
 
-struct StdStorage {
-    mapping (address => mapping(bytes4 => mapping(bytes32 => uint256))) slots;
-    mapping (address => mapping(bytes4 =>  mapping(bytes32 => bool))) finds;
-    
-    bytes32[] _keys;
-    bytes4 _sig;
-    uint256 _depth;
-    address _target;
-    bytes32 _set;
-}
+
 
 
 library stdStorage {
+    struct StdStorage {
+        mapping (address => mapping(bytes4 => mapping(bytes32 => uint256))) slots;
+        mapping (address => mapping(bytes4 =>  mapping(bytes32 => bool))) finds;
+        
+        bytes32[] _keys;
+        bytes4 _sig;
+        uint256 _depth;
+        address _target;
+        bytes32 _set;
+    }
     event SlotFound(address who, bytes4 fsig, bytes32 keysHash, uint slot);
     event WARNING_UninitedSlot(address who, uint slot);
     
